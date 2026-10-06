@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="tk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hünär Saýlaýyş Testi</title>
+    <!-- Owadan we arassa şrift üçin Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            width: 100%;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .progress {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        h2 {
+            color: #2d3748;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 14px 18px;
+            margin: 12px 0;
+            background-color: #f7fafc;
+            color: #2d3748;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 15px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            text-align: left;
+            transition: all 0.2s ease;
+        }
+        .btn:hover {
+            background-color: #edf2f7;
+            border-color: #cbd5e0;
+        }
+        .btn:active {
+            background-color: #667eea;
+            color: white;
+            border-color: #667eea;
+            transform: scale(0.99);
+        }
+        .result-box {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 15px;
+            border: 1px solid #e2e8f0;
+        }
+        .result-box ul {
+            padding-left: 20px;
+            color: #4a5568;
+        }
+        .result-box li {
+            margin-bottom: 8px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .restart-btn {
+            background-color: #48bb78 !important;
+            color: white !important;
+            border: none !important;
+            text-align: center !important;
+            font-weight: 600 !important;
+            margin-top: 25px !important;
+        }
+        .restart-btn:hover {
+            background-color: #38a169 !important;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="quiz-container">
+    <div class="progress" id="progress-text">Sorag 1 / 15</div>
+    <h2 id="question-text">Sorag ýüklenýär...</h2>
+    <div id="answers-container"></div>
+</div>
+
+<script>
+    const questions = [
+        {
+            question: "1. Täze ýagdaýa ýa-da üýtgeşmelere duýdansyz düşeniňizde özüňizi nähili alyp barýarsyňyz?",
+            answers: [
+                { text: "A) Derrew öwrenişýärin, täzeçe pikir ýöredip bilýärin.", category: "A" },
+                { text: "B) Hemme zady öňünden meýilleşdirmäge we düzgünli bolmaga çalyşýaryn.", category: "B" },
+                { text: "C) Adamlar bilen aragatnaşyga girip, bilelikde çözgüt gözleýärin.", category: "C" },
+                { text: "D) Ünsümi jemläp, anyk maglumatlary we faktlary öwrenýärin.", category: "D" }
+            ]
+        },
+        {
+            question: "2. Boş wagtyňyzda haýsy iş bilen meşgullanmak size has lezzetli gelýär?",
+            answers: [
+                { text: "A) Çylşyrymly meseleleri çözmek, oýun ýa-da programma gurnamak.", category: "A" },
+                { text: "B) Kitap okamak, ýazuw ýazmak, surat çekmek ýa-da sungat bilen meşgullanmak.", category: "B" },
+                { text: "C) Toparda ýolbaşçylyk etmek, ylalaşyk gazanmak ýa-da çäre gurnamak.", category: "C" },
+                { text: "D) Tebigatda gezelenç etmek, synag geçirmek ýa-da ylmy maglumat okamak.", category: "D" }
+            ]
+        },
+        {
+            question: "3. Toparlaýyn işde size köplenç haýsy wazypany ynanýarlar?",
+            answers: [
+                { text: "A) Tehniki tarapyny we kynçylyklaryň çözgüdini tapmagy.", category: "A" },
+                { text: "B) Döredijilik pikirlerini we dizaýn ideýalaryny hödürlemegi.", category: "B" },
+                { text: "C) Guramaçylygy alyp barmagy we adamlary birleşdirmegi.", category: "C" },
+                { text: "D) Takyklygy, barlagy we resminamalary tertipleşdirmegi.", category: "D" }
+            ]
+        },
+        {
+            question: "4. Stresli ýa-da kyn ýagdaýlarda netijäni nämäniň üsti bilen çykarýarsyňyz?",
+            answers: [
+                { text: "A) Logika, sowukkanlyk we matematiki derňew arkaly.", category: "A" },
+                { text: "B) Duýgularymy kagyz ýa-da döredijilik arkaly daşary çykarmak bilen.", category: "B" },
+                { text: "C) Başgalar bilen maslahatlaşyp, gepleşik arkaly.", category: "C" },
+                { text: "D) Düzgünlere we barlanan tejribelere daýanyp.", category: "D" }
+            ]
+        },
+        {
+            question: "5. Size täze bir zat öwrenmek hödürlense, ilki nämä üns berersiňiz?",
+            answers: [
+                { text: "A) Onuň gurluşyna, içki logikasyna we nädip işleýşine.", category: "A" },
+                { text: "B) Onuň gözelligine, täsirine we ähmiýetine.", category: "B" },
+                { text: "C) Onuň jemgyýete peýdasyna we adamlar bilen baglanyşygyna.", category: "C" },
+                { text: "D) Onuň peýdalydygyna, anyklygyna we ylmy taýdan subut edilendigine.", category: "D" }
+            ]
+        },
+        {
+            question: "6. Arzuw edýän iş gurşawyňyz nähili bolmaly?",
+            answers: [
+                { text: "A) Ösen tehnologiýaly, erkin we täzeliklere açyk ýer.", category: "A" },
+                { text: "B) Döredijilik ruhy höküm sürýän, ylham beriji gurşaw.", category: "B" },
+                { text: "C) Dinamik, işjeň, adamlaryň köp bolan we aragatnaşyk gurulýan ýer.", category: "C" },
+                { text: "D) Parahat, tertipli, howpsuz we anyk düzgünli ýer.", category: "D" }
+            ]
+        },
+        {
+            question: "7. Bir näsazlyk ýa-da ýalňyşlyk ýüze çykanda ilkinji reaksiýaňyz näme bolýar?",
+            answers: [
+                { text: "A) Näsazlygyň köküni tapyp, derrew düzediş girizýärin.", category: "A" },
+                { text: "B) Onuň başga bir oňat tarapyny ýa-da başga bir çözgüt ýoluny gözleýärin.", category: "B" },
+                { text: "C) Ýagdaýy düzetmek üçin beýlekiler bilen pikir alyşýaryn.", category: "C" },
+                { text: "D) Kadaly görkezijilere we düzgünnamalara garap hereket edýärin.", category: "D" }
+            ]
+        },
+        {
+            question: "8. Karar kabul edeniňizde nämä köp bil baglaýarsyňyz?",
+            answers: [
+                { text: "A) Akyl ýetirişime, faktlara we derňewlere.", category: "A" },
+                { text: "B) Içki duýgyma we intuisiýama.", category: "B" },
+                { text: "C) Tejribeli adamlaryň maslahatyna we umumy netijä.", category: "C" },
+                { text: "D) Kanunlara, kadalara we barlanan düzgünlere.", category: "D" }
+            ]
+        },
+        {
+            question: "9. Köpçüligiň öňünde çykyş etmek ýa-da pikirleriňizi düşündirmek size kyn dälmi?",
+            answers: [
+                { text: "A) Eger maglumat takyk bolsa, ýerine ýetirip bilerin.", category: "A" },
+                { text: "B) Öz döreden pikirlerimi beýan etmegi gowy görýärin.", category: "B" },
+                { text: "C) Adamlary ynandyrmak we başarnygy görkezmek maňa lezzet berýär.", category: "C" },
+                { text: "D) Gerek bolsa, gysgaça we anyk maglumat berip geçýärin.", category: "D" }
+            ]
+        },
+        {
+            question: "10. Kitap ýa-da film saýlanyňyzda haýsy žanrlary köp saýlaýarsyňyz?",
+            answers: [
+                { text: "A) Fantastika, ylym, kiberhowpsuzlyk ýa-da detektiv.", category: "A" },
+                { text: "B) Dramatik, çeper, sungat ýa-da biografiýa.", category: "B" },
+                { text: "C) Liderlik, psihologiýa, biznes we üstünlik taryhy.", category: "C" },
+                { text: "D) Ylmy-populýar, tebigat, taryh we amaly bilimler.", category: "D" }
+            ]
+        },
+        {
+            question: "11. Başgalara kömek etmek ýa-da öwretmek meselesine nähili garaýarsyňyz?",
+            answers: [
+                { text: "A) Ulgamlaýyn ýa-da tehniki usul bilen öwretmegi halaýaryn.", category: "A" },
+                { text: "B) Ruhy taýdan goldaw bermegi we ylham bermegi isleýärin.", category: "B" },
+                { text: "C) Olar bilen işjeň gatnaşyk edip, ugur görkezýärin.", category: "C" },
+                { text: "D) Anyk düzgünleri we bilmeli zatlary düşündirýärin.", category: "D" }
+            ]
+        },
+        {
+            question: "12. Size bir tabşyryk berlende ony ýerine ýetirmegiň iň gowy ýoly näme?",
+            answers: [
+                { text: "A) Onuň awtomatlaşdyrylan ýa-da innowasion usulyny tapmak.", category: "A" },
+                { text: "B) Özboluşly, gaýtalanmajak görnüşde ýerine ýetirmek.", category: "B" },
+                { text: "C) Topary sazlaşykly işledip, netijä tez ýetmek.", category: "C" },
+                { text: "D) Takyk we ýalňyşsyz görnüşde tabşyryga eýermek.", category: "D" }
+            ]
+        },
+        {
+            question: "13. Gündelik durmuşda ünsüňizi iň köp çekýän zat näme?",
+            answers: [
+                { text: "A) Täze tehnologiýalar we sanly ulgamlar.", category: "A" },
+                { text: "B) Dizaýn, gözellik we döredijilik taslamalary.", category: "B" },
+                { text: "C) Adamlar arasyndaky gatnaşyklar we ykdysady ösüşler.", category: "C" },
+                { text: "D) Saglyk, ylmy açyşlar we tebigat kanunlary.", category: "D" }
+            ]
+        },
+        {
+            question: "14. Ýalňyz galanyňyzda köplenç näme hakda pikir edýärsiniz?",
+            answers: [
+                { text: "A) Geljekde nähili täze ulgamlar ýa-da programmalary döredip bilerin?", category: "A" },
+                { text: "B) Nähili täze döredijilik işini ýa-da eser ýazyp bilerin?", category: "B" },
+                { text: "C) Häzirki işlerimi nähili has üstünlikli dolandyryp bilerin?", category: "C" },
+                { text: "D) Dünýäniň gurluşy we ylmy syrlary nämeler?", category: "D" }
+            ]
+        },
+        {
+            question: "15. Hünär saýlanyňyzda siziň üçin esasy itergi berýän zat näme bolmaly?",
+            answers: [
+                { text: "A) Innowasiýa we tehniki taýdan ösüş mümkinçiligi.", category: "A" },
+                { text: "B) Özbaşdaklyk, erkinlik we döredijilik azatlygy.", category: "B" },
+                { text: "C) Liderlik, ýokary girdeji we abraýly orun.", category: "C" },
+                { text: "D) Durnuklylyk, peýdalylyk we ylmy barlaglar.", category: "D" }
+            ]
+        }
+    ];
+
+    let currentQuestionIndex = 0;
+    let scores = { A: 0, B: 0, C: 0, D: 0 };
+
+    const progressText = document.getElementById("progress-text");
+    const questionText = document.getElementById("question-text");
+    const answersContainer = document.getElementById("answers-container");
+    const quizContainer = document.getElementById("quiz-container");
+
+    function loadQuestion() {
+        if (currentQuestionIndex < questions.length) {
+            let q = questions[currentQuestionIndex];
+            progressText.innerText = `Sorag ${currentQuestionIndex + 1} / ${questions.length}`;
+            questionText.innerText = q.question;
+            answersContainer.innerHTML = "";
+
+            q.answers.forEach(ans => {
+                let button = document.createElement("button");
+                button.innerText = ans.text;
+                button.classList.add("btn");
+                button.onclick = () => selectAnswer(ans.category);
+                answersContainer.appendChild(button);
+            });
+        } else {
+            showResult();
+        }
+    }
+
+    function selectAnswer(category) {
+        scores[category]++;
+        currentQuestionIndex++;
+        loadQuestion();
+    }
+
+    function showResult() {
+        let bestCategory = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+        
+        let categoryName = "";
+        let recommendedJobs = "";
+
+        if (bestCategory === "A") {
+            categoryName = "IT, Inženerçilik we Takyk tehnologiýalar";
+            recommendedJobs = `
+                <li>Programmist (Software Developer)</li>
+                <li>Kiberhowpsuzlyk hünärmeni</li>
+                <li>Maglumat bazasyny dolandyryjy (Data Scientist)</li>
+                <li>Web / Mobil dizaýner</li>
+                <li>Ugam arhitektory</li>
+            `;
+        } else if (bestCategory === "B") {
+            categoryName = "Döredijilik, Sungat we Gumanitar ugurlar";
+            recommendedJobs = `
+                <li>Grafik dizaýner / UI/UX hünärmeni</li>
+                <li>Žurnalist ýa-da Copywriter</li>
+                <li>Ýazyjy ýa-da Ssenarist</li>
+                <li>Režissýor ýa-da wideo montažçy</li>
+                <li>Arhitektor ýa-da Suratkeş</li>
+            `;
+        } else if (bestCategory === "C") {
+            categoryName = "Ykdysadyýet, Liderlik we Dolandyryş";
+            recommendedJobs = `
+                <li>Marketing hünärmeni we SMM menejer</li>
+                <li>Finansist / Bank işgäri</li>
+                <li>Telekeçi we startap esaslandyryjy</li>
+                <li>HR (Kadrlar bölümi) hünärmeni</li>
+                <li>Logistika we guramaçylyk menejeri</li>
+                <li>Ýurist we hukuk goraýjy hünärmen</li>
+            `;
+        } else {
+            categoryName = "Ylym, Saglygy goraýyş we Amaly ylymlar";
+            recommendedJobs = `
+                <li>Lukman / Hirurg / Farmasewt</li>
+                <li>Biolog / Ekolog</li>
+                <li>Gözlegçi / Ylmy işgär</li>
+                <li>Fizik ýa-da himiki hünärmen</li>
+                <li>Mugallym / Pedagog</li>
+            `;
+        }
+
+        quizContainer.innerHTML = `
+            <h2>Test Tamamlandy! 🎉</h2>
+            <p style="color: #4a5568; margin-bottom: 8px;">Siziň psihologik häsiýetiňize laýyk gelýän esasy ugur:</p>
+            <p style="color: #667eea; font-weight: 700; font-size: 18px; margin-bottom: 15px;">${categoryName}</p>
+            <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 15px 0;">
+            <p style="color: #2d3748; font-weight: 600; margin-bottom: 10px;">Size maslahat berilýän hünärler:</p>
+            <div class="result-box">
+                <ul>${recommendedJobs}</ul>
+            </div>
+            <button class="btn restart-btn" onclick="location.reload()">Täzeden başlamak</button>
+        `;
+    }
+
+    loadQuestion();
+</script>
+
+</body>
+</html>
+  
